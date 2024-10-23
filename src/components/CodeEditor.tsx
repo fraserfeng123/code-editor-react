@@ -70,8 +70,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   }, [onSave, tempContent]);
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="bg-gray-800 text-gray-300 px-4 py-2 text-sm flex justify-between items-center">
+    <div className="h-full flex flex-col rounded-lg">
+      <div className="bg-gray-900 text-gray-300 rounded-lg px-4 py-2 text-sm flex justify-between items-center">
         <span>
           {fileName}
           {isModified && <span className="ml-2 text-yellow-500">●</span>}
@@ -87,6 +87,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       </div>
       <Editor
         height="100%"
+        className={"rounded-lg"}
         language={language}
         value={tempContent}
         theme="customDarkTheme"

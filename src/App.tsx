@@ -197,12 +197,12 @@ function AppContent() {
 
   return (
     <div className="flex h-screen bg-gray-800">
-      <div className="w-[250px] p-4 overflow-auto">
+      <div className="w-[250px] h-full overflow-hidden p-4">
         <FileExplorer files={files} onFileSelect={handleFileSelect} />
       </div>
       
-      <div className="flex-1 bg-gray-900">
-        <div className="h-full w-full">
+      <div className="flex-1  p-4">
+        <div className="h-full bg-gray-900 w-full rounded-lg">
           {selectedFile ? (
             <CodeEditor
               key={selectedFile.name}

@@ -72,7 +72,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ files, onFileSelect }) => {
   const fileTree = convertToTree(files);
 
   return (
-    <div className="bg-gray-900 text-gray-300 p-4 rounded-lg shadow-lg">
+    <div className="bg-gray-900 text-gray-300 p-4 rounded-lg shadow-lg h-full  overflow-auto">
       <div className="space-y-1">
         {fileTree.map((file, index) => (
           <FileItem key={index} node={file} depth={0} onFileSelect={onFileSelect} />
