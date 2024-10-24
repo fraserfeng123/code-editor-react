@@ -222,7 +222,7 @@ function AppContent() {
         </div>
       </div>
       
-      <div className="flex-1 bg-gray-900 p-4 overflow-auto flex flex-col">
+      <div className="flex-1 p-4 overflow-auto flex flex-col">
         <div className="bg-white flex-1 rounded-lg shadow-lg overflow-hidden mb-4">
           {renderPreview()}
         </div>
