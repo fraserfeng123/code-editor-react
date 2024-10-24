@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Editor, { Monaco } from "@monaco-editor/react";
+import Editor, { Monaco, OnMount } from "@monaco-editor/react";
+import * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
 
 interface CodeEditorProps {
   language: string;
@@ -54,6 +55,38 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     });
   };
 
+  const handleEditorDidMount: OnMount = (editor, monaco) => {
+    // 配置 TypeScript 编译器选项
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+      target: monaco.languages.typescript.ScriptTarget.Latest,
+      allowNonTsExtensions: true,
+      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+      module: monaco.languages.typescript.ModuleKind.CommonJS,
+      noEmit: true,
+      esModuleInterop: true,
+      jsx: monaco.languages.typescript.JsxEmit.React,
+      reactNamespace: 'React',
+      allowJs: true,
+      typeRoots: ['node_modules/@types']
+    });
+
+    // 为 .tsx 文件添加默认的 React 导入
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(
+      'import React from "react";\n',
+      'file:///node_modules/@types/react/index.d.ts'
+    );
+
+    // 设置正确的语言模式
+    const model = editor.getModel();
+    if (model) {
+      if (fileName.endsWith('.tsx')) {
+        monaco.editor.setModelLanguage(model, 'typescript');
+      } else if (fileName.endsWith('.jsx')) {
+        monaco.editor.setModelLanguage(model, 'javascript');
+      }
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === 's') {
@@ -68,6 +101,12 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [onSave, tempContent]);
+
+  // 根据文件扩展名确定语言
+  const getLanguage = (fileName: string) => {
+    if (fileName.endsWith('.jsx') || fileName.endsWith('.tsx')) return 'typescript';
+    return language;
+  };
 
   return (
     <div className="h-full flex flex-col rounded-lg">
@@ -88,11 +127,12 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       <Editor
         height="100%"
         className={"rounded-lg"}
-        language={language}
+        language={getLanguage(fileName)}
         value={tempContent}
         theme="customDarkTheme"
         onChange={handleEditorChange}
         beforeMount={handleEditorWillMount}
+        onMount={handleEditorDidMount}
         options={{
           minimap: { enabled: false },
           scrollBeyondLastLine: false,

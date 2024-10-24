@@ -72,176 +72,259 @@ export const useFileStore = () => useContext(FileStoreContext);
 // 将 initialFiles 移动到这里
 const initialFiles: FileNode[] = [
   {
-    name: '项目文件夹',
-    realFileName: '项目文件夹',
+    name: 'code-editor-react',
+    realFileName: 'code-editor-react',
     type: 'folder',
     children: [
-      { 
-        name: '项目文件夹/calculator.html', 
-        realFileName: 'calculator.html',
-        type: 'file', 
-        content: `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>简单计算器</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .calculator {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-        }
-        #display {
-            width: 100%;
-            height: 40px;
-            font-size: 24px;
-            text-align: right;
-            margin-bottom: 10px;
-            padding: 5px;
-            box-sizing: border-box;
-        }
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            font-size: 18px;
-            border: none;
-            background-color: #e0e0e0;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #d0d0d0;
-        }
-        .operator {
-            background-color: #f0a030;
-            color: white;
-        }
-        .operator:hover {
-            background-color: #e09020;
-        }
-    </style>
-</head>
-<body>
-    <div class="calculator">
-        <input type="text" id="display" readonly>
-        <div class="buttons">
-            <button onclick="appendToDisplay('7')">7</button>
-            <button onclick="appendToDisplay('8')">8</button>
-            <button onclick="appendToDisplay('9')">9</button>
-            <button class="operator" onclick="appendToDisplay('+')">+</button>
-            <button onclick="appendToDisplay('4')">4</button>
-            <button onclick="appendToDisplay('5')">5</button>
-            <button onclick="appendToDisplay('6')">6</button>
-            <button class="operator" onclick="appendToDisplay('-')">-</button>
-            <button onclick="appendToDisplay('1')">1</button>
-            <button onclick="appendToDisplay('2')">2</button>
-            <button onclick="appendToDisplay('3')">3</button>
-            <button class="operator" onclick="appendToDisplay('*')">*</button>
-            <button onclick="appendToDisplay('0')">0</button>
-            <button onclick="appendToDisplay('.')">.</button>
-            <button onclick="calculate()">=</button>
-            <button class="operator" onclick="appendToDisplay('/')">/</button>
-            <button onclick="clearDisplay()">C</button>
-        </div>
+      {
+        name: 'code-editor-react/src',
+        realFileName: 'src',
+        type: 'folder',
+        children: [
+          {
+            name: 'code-editor-react/src/components',
+            realFileName: 'components',
+            type: 'folder',
+            children: [
+              {
+                name: 'code-editor-react/src/components/App.tsx',
+                realFileName: 'App.tsx',
+                type: 'file',
+                content: `import React from 'react';
+import Header from './Header';
+import Footer from './Footer';
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <Header />
+      <main>
+        <h1>Welcome to Code Editor React</h1>
+        <p>This is a simple React + TypeScript project.</p>
+      </main>
+      <Footer />
     </div>
-    <script>
-        function appendToDisplay(value) {
-            document.getElementById('display').value += value;
-        }
-        function clearDisplay() {
-            document.getElementById('display').value = '';
-        }
-        function calculate() {
-            try {
-                document.getElementById('display').value = eval(document.getElementById('display').value);
-            } catch (error) {
-                document.getElementById('display').value = 'Error';
-            }
-        }
-    </script>
-</body>
-</html>`, 
-        language: 'html' 
-      },
-      { 
-        name: '项目文件夹/index.html', 
-        realFileName: 'index.html', 
-        type: 'file', 
-        content: '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Document</title>\n</head>\n<body>\n  \n</body>\n</html>', 
-        language: 'html' 
-      },
-      { 
-        name: '项目文件夹/styles', 
-        realFileName: 'styles',
-        type: 'folder', 
-        children: [
-          { 
-            name: '项目文件夹/styles/main.css', 
-            realFileName: 'main.css', 
-            type: 'file', 
-            content: 'body {\n  font-family: Arial, sans-serif;\n}', 
-            language: 'css' 
+  );
+};
+
+export default App;`,
+                language: 'typescript'
+              },
+              {
+                name: 'code-editor-react/src/components/Header.tsx',
+                realFileName: 'Header.tsx',
+                type: 'file',
+                content: `import React from 'react';
+
+const Header: React.FC = () => {
+  return (
+    <header>
+      <h1>Code Editor React</h1>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      </nav>
+    </header>
+  );
+};
+
+export default Header;`,
+                language: 'typescript'
+              },
+              {
+                name: 'code-editor-react/src/components/Footer.tsx',
+                realFileName: 'Footer.tsx',
+                type: 'file',
+                content: `import React from 'react';
+
+const Footer: React.FC = () => {
+  return (
+    <footer>
+      <p>&copy; 2023 Code Editor React. All rights reserved.</p>
+    </footer>
+  );
+};
+
+export default Footer;`,
+                language: 'typescript'
+              }
+            ]
           },
-          { 
-            name: '项目文件夹/styles/responsive.css', 
-            realFileName: 'responsive.css', 
-            type: 'file', 
-            content: '@media (max-width: 768px) {\n  /* 响应式样式 */\n}', 
-            language: 'css' 
+          {
+            name: 'code-editor-react/src/index.tsx',
+            realFileName: 'index.tsx',
+            type: 'file',
+            content: `import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './components/App';
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);`,
+            language: 'typescript'
           },
+          {
+            name: 'code-editor-react/src/index.css',
+            realFileName: 'index.css',
+            type: 'file',
+            content: `body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}`,
+            language: 'css'
+          }
         ]
       },
-      { 
-        name: '项目文件夹/scripts', 
-        realFileName: 'scripts',
-        type: 'folder', 
+      {
+        name: 'code-editor-react/public',
+        realFileName: 'public',
+        type: 'folder',
         children: [
-          { 
-            name: '项目文件夹/scripts/app.js', 
-            realFileName: 'app.js', 
-            type: 'file', 
-            content: 'console.log("Hello, world!");', 
-            language: 'javascript' 
-          },
-          { 
-            name: '项目文件夹/scripts/utils.js', 
-            realFileName: 'utils.js', 
-            type: 'file', 
-            content: 'function add(a, b) {\n  return a + b;\n}', 
-            language: 'javascript' 
-          },
+          {
+            name: 'code-editor-react/public/index.html',
+            realFileName: 'index.html',
+            type: 'file',
+            content: `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Code Editor React - A simple React + TypeScript project" />
+    <title>Code Editor React</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>`,
+            language: 'html'
+          }
         ]
       },
-      { 
-        name: '项目文件夹/about.html', 
-        realFileName: 'about.html', 
-        type: 'file', 
-        content: `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>About</title>\n</head>\n<body>\n  <h1>About Us</h1>\n</body>\n</
-        html>`, 
-        language: 'html' 
-      },
+      {
+        name: 'code-editor-react/package.json',
+        realFileName: 'package.json',
+        type: 'file',
+        content: `{
+  "name": "code-editor-react",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "typescript": "^4.1.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
     ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}`,
+        language: 'json'
+      },
+      {
+        name: 'code-editor-react/tsconfig.json',
+        realFileName: 'tsconfig.json',
+        type: 'file',
+        content: `{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
   },
-  { 
-    name: 'README.md', 
-    realFileName: 'README.md', 
-    type: 'file', 
-    content: '# Project Name\n\nThis is a sample project.', 
-    language: 'markdown' 
-  },
+  "include": [
+    "src"
+  ]
+}`,
+        language: 'json'
+      },
+      {
+        name: 'code-editor-react/README.md',
+        realFileName: 'README.md',
+        type: 'file',
+        content: `# Code Editor React
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### \`npm start\`
+
+Runs the app in the development mode.
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+### \`npm test\`
+
+Launches the test runner in the interactive watch mode.
+
+### \`npm run build\`
+
+Builds the app for production to the \`build\` folder.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).`,
+        language: 'markdown'
+      }
+    ]
+  }
 ];

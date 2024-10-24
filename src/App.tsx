@@ -197,11 +197,11 @@ function AppContent() {
 
   return (
     <div className="flex h-screen bg-gray-800">
-      <div className="w-[250px] h-full overflow-hidden p-4">
+      <div className="w-[300px] h-full overflow-hidden p-4">
         <FileExplorer files={files} onFileSelect={handleFileSelect} />
       </div>
       
-      <div className="flex-1  p-4">
+      <div className="flex-1 pt-4 pb-4">
         <div className="h-full bg-gray-900 w-full rounded-lg">
           {selectedFile ? (
             <CodeEditor
@@ -226,7 +226,7 @@ function AppContent() {
         <div className="bg-white flex-1 rounded-lg shadow-lg overflow-hidden mb-4">
           {renderPreview()}
         </div>
-        <div className="h-[300px]">
+        <div className="h-[200px]">
           <Debugger language={selectedFile?.language || 'none'} logs={debugLogs} />
         </div>
       </div>

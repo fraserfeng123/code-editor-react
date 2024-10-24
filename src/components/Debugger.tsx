@@ -31,7 +31,7 @@ const Debugger: React.FC<DebuggerProps> = ({ language, logs }) => {
   );
 
   return (
-    <div className="bg-gray-800 text-white p-4 rounded-lg h-[300px] flex flex-col">
+    <div className="bg-gray-800 text-white p-4 rounded-lg h-[200px] flex flex-col">
       <div className="flex space-x-1 mb-2">
         <TabButton type="Info" />
         <TabButton type="Error" />
