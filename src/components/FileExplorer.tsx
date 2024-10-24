@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useFileStore } from '../store/FileStore';
 
 interface FileContent {
   name: string;
@@ -29,8 +30,8 @@ const FileItem: React.FC<{
   isSelected: boolean;
   selectedNode: FileNode | null;
   onSelect: (node: FileNode) => void;
-  onNewFile?: () => void;
-  onNewFolder?: () => void;
+  onNewFile: (parentPath: string) => void;
+  onNewFolder: (parentPath: string) => void;
 }> = ({ node, depth, onFileSelect, isSelected, selectedNode, onSelect, onNewFile, onNewFolder }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -52,6 +53,16 @@ const FileItem: React.FC<{
         isModified: false 
       });
     }
+  };
+
+  const handleNewFile = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onNewFile(node.name);
+  };
+
+  const handleNewFolder = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onNewFolder(node.name);
   };
 
   return (
@@ -76,7 +87,7 @@ const FileItem: React.FC<{
           <div className="flex space-x-1">
             <button
               className="p-0.5 rounded-md hover:bg-gray-600 transition-colors duration-200 ease-in-out"
-              onClick={(e) => { e.stopPropagation(); onNewFile && onNewFile(); }}
+              onClick={handleNewFile}
               title="新建文件"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
@@ -85,7 +96,7 @@ const FileItem: React.FC<{
             </button>
             <button
               className="p-0.5 rounded-md hover:bg-gray-600 transition-colors duration-200 ease-in-out"
-              onClick={(e) => { e.stopPropagation(); onNewFolder && onNewFolder(); }}
+              onClick={handleNewFolder}
               title="新建文件夹"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
@@ -106,6 +117,8 @@ const FileItem: React.FC<{
               selectedNode={selectedNode}
               isSelected={child.realFileName === selectedNode?.realFileName}
               onSelect={onSelect}
+              onNewFile={onNewFile}
+              onNewFolder={onNewFolder}
             />
           ))}
         </div>
@@ -115,27 +128,80 @@ const FileItem: React.FC<{
 };
 
 const FileExplorer: React.FC<FileExplorerProps> = ({ files, onFileSelect }) => {
-  const fileTree = convertToTree(files);
+  const { state, dispatch } = useFileStore();
   const [selectedNode, setSelectedNode] = useState<FileNode | null>(null);
+  const [editingNode, setEditingNode] = useState<{ path: string; type: 'file' | 'folder' } | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const getParentPath = (node: FileNode | null): string => {
+    if (!node) return 'code-editor-react';
+    if (node.type === 'folder') return node.name;
+    return node.name.split('/').slice(0, -1).join('/');
+  };
 
   const handleNewFile = () => {
-    // 处理新建文件的逻辑
-    console.log('新建文件');
+    const parentPath = getParentPath(selectedNode);
+    setEditingNode({ path: parentPath, type: 'file' });
   };
 
   const handleNewFolder = () => {
-    // 处理新建文件夹的逻辑
-    console.log('新建文件夹');
+    const parentPath = getParentPath(selectedNode);
+    setEditingNode({ path: parentPath, type: 'folder' });
   };
 
   const handleSelect = (node: FileNode) => {
     setSelectedNode(node);
   };
 
+  const handleCreateNode = (path: string, type: 'file' | 'folder', name: string) => {
+    if (!name.trim()) {
+      setEditingNode(null);
+      return;
+    }
+
+    const newNode: FileNode = {
+      name: `${path}/${name}`,
+      realFileName: name,
+      type: type,
+      content: type === 'file' ? '' : undefined,
+      language: type === 'file' ? 'plaintext' : undefined,
+      children: type === 'folder' ? [] : undefined
+    };
+
+    const updatedFiles = addNodeToTree(state.files, newNode);
+    dispatch({ type: 'SET_FILES', payload: updatedFiles });
+    setEditingNode(null);
+  };
+
+  const addNodeToTree = (tree: FileNode[], newNode: FileNode): FileNode[] => {
+    return tree.map(node => {
+      if (node.name === newNode.name.split('/').slice(0, -1).join('/')) {
+        return {
+          ...node,
+          children: [...(node.children || []), newNode].sort((a, b) => 
+            a.type === b.type ? a.name.localeCompare(b.name) : a.type === 'folder' ? -1 : 1
+          )
+        };
+      } else if (node.children) {
+        return {
+          ...node,
+          children: addNodeToTree(node.children, newNode)
+        };
+      }
+      return node;
+    });
+  };
+
+  useEffect(() => {
+    if (editingNode && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [editingNode]);
+
   return (
     <div className="bg-gray-900 text-gray-300 p-4 rounded-lg shadow-lg h-full flex flex-col">
       <div className="space-y-1 overflow-auto flex-grow">
-        {fileTree.map((file, index) => (
+        {state.files.map((file, index) => (
           <FileItem
             key={index}
             node={file}
@@ -149,6 +215,21 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ files, onFileSelect }) => {
           />
         ))}
       </div>
+      {editingNode && (
+        <input
+          ref={inputRef}
+          type="text"
+          className="mt-2 p-1 bg-gray-800 text-white rounded"
+          placeholder={editingNode.type === 'file' ? 'Enter file name' : 'Enter folder name'}
+          onBlur={(e) => handleCreateNode(editingNode.path, editingNode.type, e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              handleCreateNode(editingNode.path, editingNode.type, e.currentTarget.value);
+            }
+          }}
+          autoFocus
+        />
+      )}
     </div>
   );
 };
